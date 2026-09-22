@@ -1,0 +1,10 @@
+{
+  "name": "BT Spirit Wear",
+  "slug": "bt-spiritwear",
+  "version": "1.0.0",
+  "download_url": "https://raw.githubusercontent.com/strummer95/bt-spiritwear/main/bt-spiritwear-1.0.0.zip",
+  "homepage": "https://boomerts.com",
+  "tested": "6.6",
+  "requires": "5.8",
+  "changelog": "<h4>1.0.0</h4><ul><li>The spirit wear landing page and lead form moved out of Code Snippets into a real plugin, with the same updater as the other BT plugins. Future changes arrive as an update instead of code edits.</li><li>Apostrophes no longer arrive in lead emails as <code>We\\'re</code> or <code>Child\\'s</code>. Every form field is now unslashed before it is used.</li><li>While the old Code Snippets version is still active the plugin stands by and shows a notice, so leads are never emailed twice. Deactivate the snippet and the plugin takes over.</li></ul>"
+}
