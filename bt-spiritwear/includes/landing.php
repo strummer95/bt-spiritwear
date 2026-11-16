@@ -56,6 +56,16 @@ function btsw_handle_post() {
         wp_safe_redirect($thanks_url); exit;
     }
 
+    if (!wp_verify_nonce($_POST['btsw_nonce'] ?? '', 'btsw_lead')) {
+        // No session for a public form, so this isn't a same-user-forgery check —
+        // it just means the POST didn't come from a real page load of this form,
+        // which is what every off-site/blind-bot spam submission looks like. A
+        // genuine visitor who sat on the page past the nonce's life just resubmits
+        // and gets a fresh one, same as any other validation error below.
+        $GLOBALS['btsw_err'] = 'Your form session expired. Please try again.';
+        return;
+    }
+
     $school = sanitize_text_field(wp_unslash($_POST['sw_school'] ?? ''));
     $name   = sanitize_text_field(wp_unslash($_POST['sw_name'] ?? ''));
     $role   = sanitize_text_field(wp_unslash($_POST['sw_role'] ?? ''));
@@ -590,6 +600,7 @@ body { overflow-x:clip; }
       <?php if ($err): ?><div class="err" style="max-width:620px;margin:0 auto 18px"><?php echo htmlspecialchars($err); ?></div><?php endif; ?>
       <form method="post" action="<?php echo esc_url(strtok($_SERVER['REQUEST_URI'], '?')); ?>#get-started" novalidate data-reveal style="--d:.25s">
         <input type="hidden" name="bt_sw_form" value="1">
+        <?php wp_nonce_field('btsw_lead', 'btsw_nonce'); ?>
         <div class="hp" aria-hidden="true">
           <label for="website">Website</label>
           <input type="text" id="website" name="sw_website" tabindex="-1" autocomplete="off">
