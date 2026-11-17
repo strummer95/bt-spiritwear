@@ -33,11 +33,24 @@ function btsw_update_manifest() {
     return $info;
 }
 
+/**
+ * The only place an update may come from: a .zip in this plugin's own repo on
+ * raw.githubusercontent.com. A manifest that names any other host or repo is
+ * ignored, so a tampered manifest cannot hand WordPress someone else's code.
+ */
+function btsw_update_package_ok($url) {
+    $url  = (string) $url;
+    $base = 'https://raw.githubusercontent.com/' . btsw_gh_repo() . '/';
+    return strpos($url, '..') === false
+        && preg_match('#^' . preg_quote($base, '#') . '[A-Za-z0-9._/-]+\.zip$#', $url) === 1;
+}
+
 add_filter('pre_set_site_transient_update_plugins', 'btsw_push_update');
 function btsw_push_update($transient) {
     if (!is_object($transient) || empty($transient->checked)) return $transient;
     $info = btsw_update_manifest();
     if (empty($info['version']) || empty($info['download_url'])) return $transient;
+    if (!btsw_update_package_ok($info['download_url'])) return $transient;
 
     $file = plugin_basename(BTSW_FILE);
     if (version_compare($info['version'], BTSW_VERSION, '>')) {
@@ -69,7 +82,7 @@ function btsw_update_info($res, $action, $args) {
     $o->version       = isset($info['version']) ? $info['version'] : BTSW_VERSION;
     $o->author        = 'Duck and Rabbit Co.';
     $o->homepage      = isset($info['homepage']) ? $info['homepage'] : '';
-    $o->download_link = isset($info['download_url']) ? $info['download_url'] : '';
+    $o->download_link = (isset($info['download_url']) && btsw_update_package_ok($info['download_url'])) ? $info['download_url'] : '';
     $o->tested        = isset($info['tested']) ? $info['tested'] : '';
     $o->sections      = array('changelog' => isset($info['changelog']) ? $info['changelog'] : '');
     return $o;
