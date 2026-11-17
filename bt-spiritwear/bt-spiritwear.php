@@ -3,13 +3,13 @@
 Plugin Name: BT Spirit Wear
 Plugin URI: https://boomerts.com
 Description: Boomer T's spirit wear store landing page and lead form. Provides the [bt_spiritwear] shortcode used on /spiritwear/ and emails each lead to orders@boomerts.com.
-Version: 1.0.0
+Version: 1.0.1
 Author: Duck and Rabbit Co.
 */
 
 if (!defined('ABSPATH')) exit;
 
-define('BTSW_VERSION', '1.0.0');
+define('BTSW_VERSION', '1.0.1');
 define('BTSW_DIR', plugin_dir_path(__FILE__));
 define('BTSW_FILE', __FILE__);
 
